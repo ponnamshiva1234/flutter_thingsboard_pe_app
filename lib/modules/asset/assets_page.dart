@@ -53,5 +53,6 @@ class _AssetsPageState extends TbContextState<AssetsPage> {
   void dispose() {
     _pageLinkController.dispose();
     super.dispose();
+
   }
 }

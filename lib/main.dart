@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,25 +64,27 @@ class ThingsboardApp extends StatelessWidget {
 
         return WlThemeWidget(
           getIt<ThingsboardAppRouter>().tbContext,
-          wlThemedWidgetBuilder: (context, data, wlParams) => MaterialApp(
-            scaffoldMessengerKey:
+          wlThemedWidgetBuilder: (context, data, wlParams) =>
+              MaterialApp(
+                debugShowCheckedModeBanner: false,
+                scaffoldMessengerKey:
                 getIt<ThingsboardAppRouter>().tbContext.messengerKey,
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: S.supportedLocales,
-            title: wlParams.appTitle!,
-            themeMode: ThemeMode.light,
-            theme: data,
-            darkTheme: tbDarkTheme,
-            onGenerateRoute: getIt<ThingsboardAppRouter>().router.generator,
-            navigatorObservers: [
-              getIt<ThingsboardAppRouter>().tbContext.routeObserver,
-            ],
-          ),
+                localizationsDelegates: const [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: S.supportedLocales,
+                title: wlParams.appTitle!,
+                themeMode: ThemeMode.light,
+                theme: data,
+                darkTheme: tbDarkTheme,
+                onGenerateRoute: getIt<ThingsboardAppRouter>().router.generator,
+                navigatorObservers: [
+                  getIt<ThingsboardAppRouter>().tbContext.routeObserver,
+                ],
+              ),
         );
       },
     );

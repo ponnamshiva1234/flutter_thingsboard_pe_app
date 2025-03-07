@@ -29,7 +29,16 @@ class _DashboardGridCardState extends TbContextState<DashboardGridCard> {
   Widget build(BuildContext context) {
     var hasImage = widget.dashboard.image != null;
     Widget image;
-    if (hasImage) {
+
+    // Custom image for "ThingsBoard IoT Gateways" dashboard
+    if (widget.dashboard.title == "ThingsBoard IoT Gateways") {
+      image = Image.asset(
+        'assets/images/thingsboard_iot_gateways.png', // Custom image
+        width: double.infinity,  // Takes full width of the box
+        height: double.infinity, // Takes full height of the box
+        fit: BoxFit.contain,  // Ensures the image fits without cropping
+      );
+    } else if (hasImage) {
       image =
           Utils.imageFromTbImage(context, tbClient, widget.dashboard.image!);
     } else {
@@ -51,9 +60,7 @@ class _DashboardGridCardState extends TbContextState<DashboardGridCard> {
             child: Stack(
               children: [
                 SizedBox.expand(
-                  child: FittedBox(
-                    clipBehavior: Clip.hardEdge,
-                    fit: BoxFit.cover,
+                  child: Center(  // Centers the image inside the box
                     child: image,
                   ),
                 ),

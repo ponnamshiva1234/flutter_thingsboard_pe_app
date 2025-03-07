@@ -17,6 +17,7 @@ mixin AssetsBase on EntitiesBase<Asset, PageLink> {
   @override
   void onEntityTap(Asset asset) {
     navigateTo('/asset/${asset.id!.id}');
+    print("assets data"+ asset.toString());
   }
 
   @override
@@ -158,3 +159,4 @@ mixin AssetsBase on EntitiesBase<Asset, PageLink> {
     );
   }
 }
+

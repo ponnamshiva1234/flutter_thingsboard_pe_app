@@ -8,9 +8,10 @@ import 'assets_base.dart';
 class AssetsList extends BaseEntitiesWidget<Asset, PageLink>
     with AssetsBase, EntitiesListStateBase {
   AssetsList(
-    TbContext tbContext,
-    PageKeyController<PageLink> pageKeyController, {
-    super.key,
-    searchMode = false,
-  }) : super(tbContext, pageKeyController, searchMode: searchMode);
+      TbContext tbContext,
+      PageKeyController<PageLink> pageKeyController, {
+        super.key,
+        searchMode = false,
+      }) : super(tbContext, pageKeyController, searchMode: searchMode);
 }
+

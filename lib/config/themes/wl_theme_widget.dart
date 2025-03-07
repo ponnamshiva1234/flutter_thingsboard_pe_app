@@ -4,19 +4,19 @@ import 'package:thingsboard_app/core/context/tb_context_widget.dart';
 import 'package:thingsboard_app/thingsboard_client.dart';
 
 typedef WlThemedWidgetBuilder = Widget Function(
-  BuildContext context,
-  ThemeData data,
-  WhiteLabelingParams wlParams,
-);
+    BuildContext context,
+    ThemeData data,
+    WhiteLabelingParams wlParams,
+    );
 
 class WlThemeWidget extends TbContextWidget {
   final WlThemedWidgetBuilder wlThemedWidgetBuilder;
 
   WlThemeWidget(
-    TbContext tbContext, {
-    required this.wlThemedWidgetBuilder,
-    super.key,
-  }) : super(tbContext);
+      TbContext tbContext, {
+        required this.wlThemedWidgetBuilder,
+        super.key,
+      }) : super(tbContext);
 
   @override
   State<StatefulWidget> createState() => _WlThemeWidgetState();
@@ -37,18 +37,20 @@ class _WlThemeWidgetState extends TbContextState<WlThemeWidget> {
   }
 
   void _loadWl() {
-    _themeData = tbContext.wlService.themeData;
-    _wlParams = tbContext.wlService.wlParams;
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  void wlUpdated() {
     setState(() {
       _themeData = tbContext.wlService.themeData;
       _wlParams = tbContext.wlService.wlParams;
     });
+  }
+
+  // **This is the missing method that was causing the error**
+  void wlUpdated() {
+    if (mounted) {
+      setState(() {
+        _themeData = tbContext.wlService.themeData;
+        _wlParams = tbContext.wlService.wlParams;
+      });
+    }
   }
 
   @override

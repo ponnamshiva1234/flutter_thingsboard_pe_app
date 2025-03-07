@@ -10,10 +10,10 @@ import 'package:thingsboard_app/widgets/tb_app_bar.dart';
 
 class MainDashboardPage extends TbContextWidget {
   MainDashboardPage(
-    TbContext tbContext, {
-    required this.controller,
-    super.key,
-  }) : super(tbContext);
+      TbContext tbContext, {
+        required this.controller,
+        super.key,
+      }) : super(tbContext);
 
   final DashboardPageController controller;
 
@@ -37,22 +37,11 @@ class _MainDashboardPageState extends TbContextState<MainDashboardPage>
     return Scaffold(
       appBar: TbAppBar(
         tbContext,
-        leading: BackButton(
-          onPressed: () async {
-            if (_dashboardController?.rightLayoutOpened.value == true) {
-              await _dashboardController?.toggleRightLayout();
-              return;
-            }
-
-            final controller = _dashboardController?.controller;
-            if (await controller?.canGoBack() == true) {
-              await controller?.goBack();
-            } else {
-              widget.controller.closeDashboard().then(
-                    (_) => _dashboardLoadingCtrl?.value = true,
-                  );
-            }
-          },
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
         ),
         showLoadingIndicator: false,
         elevation: 1,
@@ -67,26 +56,9 @@ class _MainDashboardPageState extends TbContextState<MainDashboardPage>
             );
           },
         ),
-        actions: [
-          ValueListenableBuilder<bool>(
-            valueListenable: hasRightLayout,
-            builder: (context, hasRightLayout, widget) {
-              if (hasRightLayout) {
-                return IconButton(
-                  onPressed: () => _dashboardController?.toggleRightLayout(),
-                  icon: AnimatedIcon(
-                    progress: rightLayoutMenuAnimation,
-                    icon: AnimatedIcons.menu_close,
-                  ),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          ),
-        ],
         canGoBack: true,
       ),
+      drawer: _buildDrawer(),
       body: ValueListenableBuilder<String?>(
         valueListenable: getIt<IEndpointService>().listenEndpointChanges,
         builder: (context, value, _) {
@@ -121,6 +93,57 @@ class _MainDashboardPageState extends TbContextState<MainDashboardPage>
     );
   }
 
+  Widget _buildDrawer() {
+    return Drawer(
+      child: Column(
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            child: Center(
+              child: Text(
+                'Dashboard Menu',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.dashboard),
+            title: const Text('Dashboard Home'),
+            onTap: () {
+              Navigator.pop(context);
+              // Handle Dashboard home navigation
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.pop(context);
+              // Handle Settings navigation
+            },
+          ),
+          ValueListenableBuilder<bool>(
+            valueListenable: hasRightLayout,
+            builder: (context, hasRightLayout, widget) {
+              if (hasRightLayout) {
+                return ListTile(
+                  leading: const Icon(Icons.menu_open),
+                  title: const Text('Toggle Right Layout'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _dashboardController?.toggleRightLayout();
+                  },
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -140,6 +163,8 @@ class _MainDashboardPageState extends TbContextState<MainDashboardPage>
   @override
   void dispose() {
     rightLayoutMenuController.dispose();
+    dashboardTitleValue.dispose();
+    hasRightLayout.dispose();
     super.dispose();
   }
 }

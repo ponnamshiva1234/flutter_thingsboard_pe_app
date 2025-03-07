@@ -7,21 +7,23 @@ abstract class TbThemeUtils {
 
   static const Color _tbTextColor = Color(0xFF282828);
 
-  static final tbPrimary =
-      _mergeColors(Colors.teal, {'500': Colors.teal[800]!.value});
-  static final tbAccent = _mergeColors(Colors.deepOrange, {});
+  // Updated primary and secondary colors based on CIO's request
+  static final tbPrimary = _createMaterialColor(const Color(0xFFE02129)); // Primary Color
+  static final tbAccent = _createMaterialColor(const Color(0xFFE53935)); // Secondary Color
 
   static ThemeData createTheme(PaletteSettings? paletteSettings) {
     var primarySwatch =
-        _materialColorFromPalette(paletteSettings?.primaryPalette, true);
+        _materialColorFromPalette(paletteSettings?.primaryPalette, true) ??
+            tbPrimary;
     var accentColor =
-        _materialColorFromPalette(paletteSettings?.accentPalette, false);
+        _materialColorFromPalette(paletteSettings?.accentPalette, false) ??
+            tbAccent;
     var primaryColor = primarySwatch[500]!;
     ThemeData theme = ThemeData(primarySwatch: primarySwatch);
     return ThemeData(
       useMaterial3: false,
       primarySwatch: primarySwatch,
-      colorScheme: theme.colorScheme.copyWith(primary: accentColor),
+      colorScheme: theme.colorScheme.copyWith(primary: primaryColor, secondary: accentColor),
       scaffoldBackgroundColor: const Color(0xFFFAFAFA),
       textTheme: _tbTypography.black,
       primaryTextTheme: _tbTypography.black,
@@ -48,15 +50,13 @@ abstract class TbThemeUtils {
   }
 
   static MaterialColor _materialColorFromPalette(
-    Palette? palette,
-    bool primary,
-  ) {
+      Palette? palette, bool primary) {
     if (palette == null) {
       return primary ? tbPrimary : tbAccent;
     }
     if (palette.type == 'custom') {
       var extendsColor = _colorFromType(palette.extendsPalette!);
-      return _mergeColors(extendsColor, palette.colors);
+      return _createMaterialColor(extendsColor);
     } else {
       return _colorFromType(palette.type);
     }
@@ -103,48 +103,22 @@ abstract class TbThemeUtils {
       case 'blue-grey':
         return Colors.blueGrey;
       default:
-        return tbPrimary;
+        return tbPrimary; // Ensure default primary color is used
     }
   }
 
-  static MaterialColor _mergeColors(
-    MaterialColor color,
-    Map<String, dynamic>? colors,
-  ) {
-    if (colors != null) {
-      var swatch = <int, Color>{
-        50: _parseColor(colors['50'], color[50]!),
-        100: _parseColor(colors['100'], color[100]!),
-        200: _parseColor(colors['200'], color[200]!),
-        300: _parseColor(colors['300'], color[300]!),
-        400: _parseColor(colors['400'], color[400]!),
-        500: _parseColor(colors['500'], color[500]!),
-        600: _parseColor(colors['600'], color[600]!),
-        700: _parseColor(colors['700'], color[700]!),
-        800: _parseColor(colors['800'], color[800]!),
-        900: _parseColor(colors['900'], color[900]!),
-      };
-      return MaterialColor(swatch[500]!.value, swatch);
-    } else {
-      return color;
-    }
-  }
-
-  static Color _parseColor(dynamic rawColor, Color defaultColor) {
-    int? intColor;
-    if (rawColor != null) {
-      if (rawColor is String && rawColor.isNotEmpty) {
-        if (rawColor.startsWith('#')) {
-          rawColor = rawColor.replaceFirst('#', '0xFF');
-        }
-        intColor = int.parse(rawColor);
-      } else if (rawColor is int) {
-        intColor = rawColor;
-      }
-    }
-    if (intColor != null) {
-      return Color(intColor);
-    }
-    return defaultColor;
+  static MaterialColor _createMaterialColor(Color color) {
+    return MaterialColor(color.value, {
+      50: color.withOpacity(0.1),
+      100: color.withOpacity(0.2),
+      200: color.withOpacity(0.3),
+      300: color.withOpacity(0.4),
+      400: color.withOpacity(0.5),
+      500: color.withOpacity(0.6),
+      600: color.withOpacity(0.7),
+      700: color.withOpacity(0.8),
+      800: color.withOpacity(0.9),
+      900: color.withOpacity(1.0),
+    });
   }
 }

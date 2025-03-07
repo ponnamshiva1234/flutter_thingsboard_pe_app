@@ -8,11 +8,11 @@ import 'package:thingsboard_app/thingsboard_client.dart';
 class AssetDetailsPage extends EntityDetailsPage<Asset> {
   AssetDetailsPage(TbContext tbContext, String assetId, {super.key})
       : super(
-          tbContext,
-          entityId: assetId,
-          defaultTitle: 'Asset',
-          subTitle: 'Asset details',
-        );
+    tbContext,
+    entityId: assetId,
+    defaultTitle: 'Asset',
+    subTitle: 'Asset details',
+  );
 
   @override
   Future<Asset?> fetchEntity(String id) {
@@ -21,6 +21,7 @@ class AssetDetailsPage extends EntityDetailsPage<Asset> {
 
   @override
   Widget buildEntityDetails(BuildContext context, Asset entity) {
+    print("asset data"+entity.toString());
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -40,3 +41,4 @@ class AssetDetailsPage extends EntityDetailsPage<Asset> {
     );
   }
 }
+

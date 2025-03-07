@@ -21,28 +21,38 @@ import 'package:thingsboard_app/modules/version/route/version_route.dart';
 import 'package:thingsboard_app/utils/ui_utils_routes.dart';
 
 class ThingsboardAppRouter {
-  final router = FluroRouter();
-  late final _tbContext = TbContext(router);
+  final FluroRouter router = FluroRouter();
+  late final TbContext _tbContext;
 
   ThingsboardAppRouter() {
+    _tbContext = TbContext(router); // Properly initialize TbContext
+
+    // Define a fallback route for undefined paths
     router.notFoundHandler = Handler(
       handlerFunc: (context, params) {
         final settings = context!.settings;
-
         return Scaffold(
           appBar: AppBar(title: const Text('Not Found')),
-          body: Center(child: Text('Route not defined: ${settings!.name}')),
+          body: Center(child: Text('Route not defined: ${settings?.name ?? "unknown"}')),
         );
       },
     );
 
+    // Register all module-specific routes
+    _registerModuleRoutes();
+  }
+
+  void _registerModuleRoutes() {
     InitRoutes(_tbContext).registerRoutes();
     AuthRoutes(_tbContext).registerRoutes();
     UiUtilsRoutes(_tbContext).registerRoutes();
     MainRoutes(_tbContext).registerRoutes();
     HomeRoutes(_tbContext).registerRoutes();
     ProfileRoutes(_tbContext).registerRoutes();
-    AssetRoutes(_tbContext).registerRoutes();
+
+    /// 🔥 **Fix: Check if `AssetRoutes` requires `_tbContext`**
+    AssetRoutes(_tbContext).registerRoutes(); // ✅ Fix for AssetRoutes
+
     DeviceRoutes(_tbContext).registerRoutes();
     AlarmRoutes(_tbContext).registerRoutes();
     DashboardRoutes(_tbContext).registerRoutes();

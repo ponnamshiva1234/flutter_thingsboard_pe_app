@@ -36,9 +36,9 @@ class LayoutPagesBloc extends Bloc<LayoutPagesEvent, LayoutPagesState> {
   final TbContext tbContext;
 
   Future<void> _onEvent(
-    LayoutPagesEvent event,
-    Emitter<LayoutPagesState> emit,
-  ) async {
+      LayoutPagesEvent event,
+      Emitter<LayoutPagesState> emit,
+      ) async {
     switch (event) {
       case BottomBarFetchEvent():
         final items = layoutService.getCachedPageLayouts();
@@ -47,23 +47,23 @@ class LayoutPagesBloc extends Bloc<LayoutPagesEvent, LayoutPagesState> {
           items
               .map(
                 (e) => TbMainNavigationItem(
-                  page: MainItemWidget(
-                    tbContext,
-                    path: e.path ?? '',
-                    child: getWidget(e),
-                  ),
-                  title: getLabel(e, event.context),
-                  icon: getIcon(e),
-                  path: getPath(e),
-                  showAdditionalIcon: e.id == Pages.notifications,
-                  additionalIconSmall: e.id == Pages.notifications
-                      ? notificationSmallNumberWidget()
-                      : null,
-                  additionalIconLarge: e.id == Pages.notifications
-                      ? notificationLargeNumberWidget()
-                      : null,
-                ),
-              )
+              page: MainItemWidget(
+                tbContext,
+                path: e.path ?? '',
+                child: getWidget(e),
+              ),
+              title: getLabel(e, event.context),
+              icon: getIcon(e),
+              path: getPath(e),
+              showAdditionalIcon: e.id == Pages.notifications,
+              additionalIconSmall: e.id == Pages.notifications
+                  ? notificationSmallNumberWidget()
+                  : null,
+              additionalIconLarge: e.id == Pages.notifications
+                  ? notificationLargeNumberWidget()
+                  : null,
+            ),
+          )
               .toList(),
           more: TbMainNavigationItem(
             page: MainItemWidget(
@@ -92,12 +92,16 @@ class LayoutPagesBloc extends Bloc<LayoutPagesEvent, LayoutPagesState> {
         return HomePage(tbContext);
       case Pages.alarms:
         return AlarmsPage(tbContext);
+    // case Pages.devices:
+    //   return DevicesMainPage(tbContext);
       case Pages.devices:
-        return DevicesMainPage(tbContext);
+        return AssetsPage(tbContext); // Swapped with AssetsPage
       case Pages.customers:
         return CustomersPage(tbContext);
+    // case Pages.assets:
+    //   return AssetsPage(tbContext);
       case Pages.assets:
-        return AssetsPage(tbContext);
+        return DevicesMainPage(tbContext); // Swapped with DevicesMainPage
       case Pages.audit_logs:
         return AuditLogsPage(tbContext);
       case Pages.notifications:
@@ -147,12 +151,16 @@ class LayoutPagesBloc extends Bloc<LayoutPagesEvent, LayoutPagesState> {
         return S.of(context).home;
       case Pages.alarms:
         return S.of(context).alarms;
+    // case Pages.devices:
+    //   return S.of(context).devices;
       case Pages.devices:
-        return S.of(context).devices;
+        return S.of(context).assets; // Swapped with Assets
       case Pages.customers:
         return S.of(context).customers;
+    // case Pages.assets:
+    //   return S.of(context).assets;
       case Pages.assets:
-        return S.of(context).assets;
+        return S.of(context).devices; // Swapped with Devices
       case Pages.audit_logs:
         return S.of(context).auditLogs;
       case Pages.notifications:
@@ -177,12 +185,16 @@ class LayoutPagesBloc extends Bloc<LayoutPagesEvent, LayoutPagesState> {
         return Icons.home_outlined;
       case Pages.alarms:
         return Icons.notifications_outlined;
+    // case Pages.devices:
+    //   return Icons.devices_other_outlined;
       case Pages.devices:
-        return Icons.devices_other_outlined;
+        return Icons.domain_outlined; // Swapped with Assets Icon
       case Pages.customers:
         return Icons.supervisor_account_outlined;
+    // case Pages.assets:
+    //   return Icons.domain_outlined;
       case Pages.assets:
-        return Icons.domain_outlined;
+        return Icons.devices_other_outlined; // Swapped with Devices Icon
       case Pages.audit_logs:
         return Icons.track_changes_outlined;
       case Pages.notifications:
@@ -203,12 +215,16 @@ class LayoutPagesBloc extends Bloc<LayoutPagesEvent, LayoutPagesState> {
         return '/home';
       case Pages.alarms:
         return '/alarms';
+    // case Pages.devices:
+    //   return '/devices';
       case Pages.devices:
-        return '/devices';
+        return '/assets'; // Swapped with Assets
       case Pages.customers:
         return '/customers';
+    // case Pages.assets:
+    //   return '/assets';
       case Pages.assets:
-        return '/assets';
+        return '/devices'; // Swapped with Devices
       case Pages.audit_logs:
         return '/auditLogs';
       case Pages.notifications:

@@ -6,13 +6,14 @@ import 'package:thingsboard_app/thingsboard_client.dart';
 class AssetsListWidget extends EntitiesListPageLinkWidget<Asset>
     with AssetsBase {
   AssetsListWidget(
-    TbContext tbContext, {
-    super.key,
-    EntitiesListWidgetController? controller,
-  }) : super(tbContext, controller: controller);
+      TbContext tbContext, {
+        super.key,
+        EntitiesListWidgetController? controller,
+      }) : super(tbContext, controller: controller);
 
   @override
   void onViewAll() {
     navigateTo('/assets');
   }
 }
+
